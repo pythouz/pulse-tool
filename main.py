@@ -3,23 +3,25 @@ import sys
 import os
 
 def run_download_tool(url):
-    # المجلد المربوط في الحاوية (لا تغيره)
+    # المجلد المخصص للتحميل داخل الحاوية
     save_path = "/home/pulseuser"
     
-    # خيارات التحميل (جودة عالية + حفظ بالعنوان)
+    # رسالة تعريفية للـ Debug للتأكد أن هذا هو الملف الجديد
+    print(f"--- [PULSE-DEBUG] النسخة الجديدة تعمل الآن (main.py) ---", flush=True)
+    print(f"--- [PulseEngine] بدء معالجة الرابط: {url} ---", flush=True)
+
+    # خيارات التحميل
     ydl_opts = {
         'format': 'best',
         'outtmpl': f'{save_path}/%(title)s.%(ext)s',
         'quiet': False,
     }
     
-    print(f"--- [PulseEngine] بدء معالجة الرابط: {url} ---", flush=True)
-    
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
         
-        # التأكد من نجاح العملية محاسبياً (Audit)
+        # التأكد المحاسبي من وجود الملفات
         files = os.listdir(save_path)
         print(f"--- [PulseEngine] تم التحميل بنجاح. المحتويات الحالية: {files} ---", flush=True)
         
@@ -27,8 +29,9 @@ def run_download_tool(url):
         print(f"--- [PulseEngine] خطأ أثناء التشغيل: {str(e)} ---", flush=True)
 
 if __name__ == "__main__":
-    # استلام الرابط من الـ Arguments
+    # استلام الرابط من الـ Arguments المرسلة من النظام
     if len(sys.argv) > 1:
-        run_download_tool(sys.argv[1])
+        video_url = sys.argv[1]
+        run_download_tool(video_url)
     else:
-        print("--- [PulseEngine] خطأ: يرجى إدخال رابط يوتيوب في حقل الـ Arguments ---", flush=True)
+        print("--- [PulseEngine] خطأ: لم يتم استلام رابط الفيديو. ---", flush=True)
